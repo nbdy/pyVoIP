@@ -12,6 +12,7 @@ import warnings
 __all__ = [
     "CallState",
     "VoIPCall",
+    "CallState"
 ]
 
 
