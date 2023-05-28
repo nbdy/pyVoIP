@@ -75,6 +75,7 @@ class VoIPConnection:
     def recv(self, nbytes: int, timeout=0) -> bytes:
         if self.conn:
             # TODO: Timeout
+            data = None
             msg = None
             while not msg and not self.sock.SD:
                 data = self.conn.recv(nbytes)
@@ -95,7 +96,7 @@ class VoIPConnection:
                 conn.row_factory = sqlite3.Row
                 sql = (
                     """SELECT * FROM "msgs" WHERE "call_id" = ? AND "local_tag" = ?"""
-                    + (""" AND "remote_tag" = ?""" if self.remote_tag else "")
+                    + """ AND "remote_tag" = ?""" if self.remote_tag else ""
                 )
                 bindings = (
                     (self.call_id, self.local_tag, self.remote_tag)
@@ -294,7 +295,7 @@ class VoIPSocket(threading.Thread):
                 return from_tag, to_tag
         # If there is still not a match, guess the to or from tag based
         # on if the message. Requests except ACK likely have us as To,
-        # for everthing else we're likely the From
+        # for everything else we're likely the From
         elif (
             message.type == SIPMessageType.REQUEST and message.method != "ACK"
         ):
